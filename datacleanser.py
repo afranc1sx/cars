@@ -26,24 +26,21 @@ df['ID']=df['ID'].apply(lambda x:int(x, 16))
 
 # print(df[df['Label']==0]) --> to see t values 
 
-# splitting data into test/train
-y = df[['Label']].copy()     # predictor variable 
-X = df[['ID', 'DLC','Data0','Data1','Data2','Data3','Data4','Data5','Data6','Data7']].copy() #feature 
+sample_df = df.sample(frac=0.001, random_state=42)  # sample 0.1% of 3.6m data
+
+ #split the sampled data into test/train
+y = sample_df[['Label']].copy()  #predictor variable
+X = sample_df[['ID', 'DLC', 'Data0', 'Data1', 'Data2', 'Data3', 'Data4', 'Data5', 'Data6', 'Data7']].copy()  # Feature
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, random_state=42)
 
+#create model 
+model = KNeighborsClassifier()
+model.fit(X_train, y_train.values.ravel())
 
+#model
+model_predictions = model.predict(X_test)
 
-
-
-
-# create the model 
-model = KNeighborsClassifier() 
-model.fit(X_train, y_train['Label'])
-
-#model onwards 
-model_predict = model.predict(X_test)
-
-#accuracy testing
-accuracy_test = accuracy_score(y_test, model.predict)
-print(accuracy_test)
+#accuracy test
+accuracy_test = accuracy_score(y_test, model_predictions)
+print("Accuracy:", accuracy_test)
