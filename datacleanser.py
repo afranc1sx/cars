@@ -1,5 +1,6 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import numpy as np 
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score,classification_report
 from sklearn.preprocessing import MinMaxScaler
@@ -29,7 +30,7 @@ df['ID']=df['ID'].apply(lambda x:int(x, 16))
 
 # print(df[df['Label']==0]) --> to see t values 
 
-sample_df = df.sample(frac=0.02, random_state=42)  #10.8k values instead 
+sample_df = df.sample(frac=0.0028, random_state=42)  #10.8k values instead 
 
  #split the sampled data into test/train
 y = sample_df[['Label']].copy()  #predictor variable
@@ -39,19 +40,22 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, random
 
 
 scaler=MinMaxScaler()
-X_trained_scaled = scaler.fit_transform(X_train)
+X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 #create model 
 model = KNeighborsClassifier()
-model.fit(X_trained_scaled, y_train.values.ravel())
+model.fit(X_train_scaled, y_train.values.ravel())
 
 #model
-model_predictions = model.predict(X_test_scaled)
+model_predictions = model.predict(X_test_scaled) 
 
 #accuracy test
 accuracy_test = accuracy_score(y_test, model_predictions)
-print("Accuracy:", accuracy_test)
+
+cv_scores = cross_val_score(model, X_train_scaled, y_train.values.ravel(), cv = 6)
 
 report = classification_report(y_test, model_predictions)
+print("Accuracy:", accuracy_test)
 print("Report:\n", report)
+print("Cross validation: \n", cv_scores)
