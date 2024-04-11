@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score,classification_report
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import classification_report
+
 
 #load the dataset
 df=pd.read_csv('C:/Users/a6shl/downloads/DoS_dataset.csv',names=['time', 'ID', 'DLC','Data0','Data1','Data2','Data3','Data4','Data5','Data6','Data7','Label'])
@@ -27,7 +29,7 @@ df['ID']=df['ID'].apply(lambda x:int(x, 16))
 
 # print(df[df['Label']==0]) --> to see t values 
 
-sample_df = df.sample(frac=0.005, random_state=42)  #10.8k values instead 
+sample_df = df.sample(frac=0.02, random_state=42)  #10.8k values instead 
 
  #split the sampled data into test/train
 y = sample_df[['Label']].copy()  #predictor variable
@@ -50,3 +52,6 @@ model_predictions = model.predict(X_test_scaled)
 #accuracy test
 accuracy_test = accuracy_score(y_test, model_predictions)
 print("Accuracy:", accuracy_test)
+
+report = classification_report(y_test, model_predictions)
+print("Report:\n", report)
