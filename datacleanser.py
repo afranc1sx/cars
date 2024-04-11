@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score,classification_report
+from sklearn.preprocessing import MinMaxScaler
 
 #load the dataset
 df=pd.read_csv('C:/Users/a6shl/downloads/DoS_dataset.csv',names=['time', 'ID', 'DLC','Data0','Data1','Data2','Data3','Data4','Data5','Data6','Data7','Label'])
@@ -26,7 +27,7 @@ df['ID']=df['ID'].apply(lambda x:int(x, 16))
 
 # print(df[df['Label']==0]) --> to see t values 
 
-sample_df = df.sample(frac=0.001, random_state=42)  # sample 0.1% of 3.6m data
+sample_df = df.sample(frac=0.005, random_state=42)  #10.8k values instead 
 
  #split the sampled data into test/train
 y = sample_df[['Label']].copy()  #predictor variable
@@ -34,12 +35,17 @@ X = sample_df[['ID', 'DLC', 'Data0', 'Data1', 'Data2', 'Data3', 'Data4', 'Data5'
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, random_state=42)
 
+
+scaler=MinMaxScaler()
+X_trained_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
 #create model 
 model = KNeighborsClassifier()
-model.fit(X_train, y_train.values.ravel())
+model.fit(X_trained_scaled, y_train.values.ravel())
 
 #model
-model_predictions = model.predict(X_test)
+model_predictions = model.predict(X_test_scaled)
 
 #accuracy test
 accuracy_test = accuracy_score(y_test, model_predictions)
