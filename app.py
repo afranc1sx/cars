@@ -3,19 +3,13 @@ from joblib import load
 import numpy as np
 import os
 
-# Load the trained model
-@st.cache
+#load trained model
 def load_model():
     return load('C:/Users/a6shl/OneDrive/Documents/GitHub/carzz/knn_model.joblib')
 
+# title 
+st.title('Connected Vehicle Cyberattack Simulation')
 
-# Load the model
-model = load_model()
-
-# Streamlit app title
-st.title('Vehicle Cyberattack Detection')
-
-# Input fields for user to enter features
 id_input = st.number_input('Enter ID', value=0)
 dlc_input = st.number_input('Enter DLC', value=0)
 data0_input = st.number_input('Enter Data0', value=0)
@@ -27,16 +21,10 @@ data5_input = st.number_input('Enter Data5', value=0)
 data6_input = st.number_input('Enter Data6', value=0)
 data7_input = st.number_input('Enter Data7', value=0)
 
-# Prepare input features for prediction
+#create array to store the data
 input_data = np.array([id_input, dlc_input, data0_input, data1_input, 
                        data2_input, data3_input, data4_input, data5_input,
                        data6_input, data7_input]).reshape(1, -1)
 
-# Make prediction
-prediction = model.predict(input_data)
+prediction = load_model.predict(input_data)
 
-# Display prediction
-if prediction == 0:
-    st.write('No cyberattack detected.')
-else:
-    st.write('Cyberattack detected!')
