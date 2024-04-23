@@ -3,15 +3,11 @@ from joblib import load
 import numpy as np
 import os
 
-
-
-# Print the current working directory
-print("Current working directory:", os.getcwd())
-
 # Load the trained model
 @st.cache
 def load_model():
-    return load('C:/Users/a6shl/OneDrive/Documents/GitHub/carzz/cars/knn_model.joblib')  # Specify the full path to the model file
+    return load('C:/Users/a6shl/OneDrive/Documents/GitHub/carzz/knn_model.joblib')
+
 
 # Load the model
 model = load_model()
